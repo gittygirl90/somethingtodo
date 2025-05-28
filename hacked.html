@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hacker Birthday Greeting</title>
+  <style>
+    body, .scene {
+      margin: 0;
+      background: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    .scene {
+      display: none;
+      flex-direction: column;
+    }
+
+    .active {
+      display: flex;
+    }
+
+    .hacked-text {
+      font-size: 5rem;
+      color: #0f0;
+      animation: neonGlow 1.5s ease-in-out infinite alternate, glitch 1s infinite;
+      user-select: none;
+    }
+
+    @keyframes neonGlow {
+      from {
+        text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      }
+      to {
+        text-shadow: 0 0 20px #0f0, 0 0 40px #0f0;
+      }
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-1px, 2px); }
+      80% { transform: translate(1px, -1px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .message {
+      font-size: 2rem;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      max-width: 90vw;
+      min-height: 60vh;
+      color: #00ff00;
+      user-select: text;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ff00;
+      text-align: left;
+      padding: 20px 30px;
+      background: black;
+      overflow-wrap: break-word;
+      overflow: hidden;
+      border: 2px solid #00ff00;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      margin: auto;
+      white-space: pre-wrap;
+    }
+
+    .boom {
+      font-size: 5rem;
+      color: rgb(149, 255, 0);
+      font-weight: bold;
+      animation: drip 1s infinite;
+      text-shadow: 0 0 15px rgb(149, 255, 0);
+      user-select: none;
+    }
+
+    @keyframes drip {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(5px) scale(1.05); }
+      100% { transform: translateY(0); }
+    }
+
+    #startScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: black;
+      color: #0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    #startBtn {
+      padding: 20px 40px;
+      font-size: 2rem;
+      font-family: monospace;
+      background: black;
+      color: #0f0;
+      border: 2px solid #0f0;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <button id="startBtn">ENTER</button>
+  </div>
+
+  <!-- Scene 1: HACKED -->
+  <div id="scene1" class="scene active">
+    <div class="hacked-text">HACKED 🔐</div>
+  </div>
+
+  <!-- Scene 2: Hacker Message -->
+  <div id="scene2" class="scene">
+    <pre id="message" class="message"></pre>
+  </div>
+
+  <!-- Scene 3: BOOM -->
+  <div id="scene3" class="scene">
+    <div class="boom">💣 Boom!! HAPPY BIRTHDAY CHEERS TO 21 PRATHYUSHA</div>
+  </div>
+
+  <audio id="bgm" src="glitch.mp3" preload="auto" loop></audio>
+
+  <script>
+    const bgm = document.getElementById('bgm');
+    const scene1 = document.getElementById('scene1');
+    const scene2 = document.getElementById('scene2');
+    const scene3 = document.getElementById('scene3');
+    const messageEl = document.getElementById('message');
+
+    const messageText = `System: Initializing birthday.exe...
+
+> Hello, PRATHYUSHA 💻
+> Compiling 1000+ wishes...
+> Debugging all negativity...
+> Uploading smiles and success 🎯
+
+On this special day,
+May your life be as bug-free as your best code,
+As dynamic as your dreams,
+And as infinite as a while(true) loop of happiness! ♾️
+
+Happy Birthday to the one and only,
+PRATHYUSHA – The queen of logic, heart, and hustle 👑
+~ Program terminated with joy 💖 ~
+
+`;
+
+    function typeWriter(text, element, delay = 40) {
+      let i = 0;
+      element.textContent = '';
+      return new Promise((resolve) => {
+        function type() {
+          if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, delay);
+          } else {
+            resolve();
+          }
+        }
+        type();
+      });
+    }
+
+    document.getElementById('startBtn').addEventListener('click', async () => {
+      document.getElementById('startScreen').style.display = 'none';
+      bgm.volume = 0.8;
+      try {
+        await bgm.play();
+      } catch (e) {
+        console.log("Audio play failed:", e);
+      }
+
+      // Show Scene 1 for 4 seconds
+      setTimeout(() => {
+        scene1.classList.remove('active');
+        scene2.classList.add('active');
+
+        typeWriter(messageText, messageEl).then(() => {
+          setTimeout(() => {
+            scene2.classList.remove('active');
+            scene3.classList.add('active');
+          }, 5000);
+        });
+      }, 4000);
+    });
+  </script>
+</body>
+</html>
